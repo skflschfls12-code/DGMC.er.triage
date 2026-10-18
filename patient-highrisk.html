@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>응급실에서 꼭 먼저 말씀해 주세요</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF3F1; --paper: #FFFFFF; --ink: #16302A; --muted: #4A615A;
+    --line: #C9D8D2; --teal: #0E6B5C; --teal-soft: #DCEDE8;
+    --bubble: #FFE9A8; --bubble-ink: #3D2E00; --warn: #9A3412; --warn-soft: #FDECE3;
+    --base: 19px;
+    color-scheme: light; box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1C19; --paper: #182A26; --ink: #E6F0EC; --muted: #A9C0B8;
+      --line: #2C4540; --teal: #5FC4AF; --teal-soft: #1E3833;
+      --bubble: #4A3B0E; --bubble-ink: #FFE9A8; --warn: #FDBA8C; --warn-soft: #3A2116;
+      color-scheme: dark;
+    }
+  }
+  :root.big { --base: 23px; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); font-size: var(--base); }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    line-height: 1.7; word-break: keep-all;
+  }
+  main { max-width: 36rem; margin: 0 auto; padding: 1.4rem 1.1rem 3rem; }
+  .page { display: none; }
+  .page.on { display: block; }
+
+  .top { display: flex; justify-content: space-between; align-items: center; gap: .8rem; min-height: 2.4rem; }
+  .place { font-size: .8rem; color: var(--muted); font-weight: 600; }
+  .size-btn, .back {
+    font: inherit; font-size: .8rem; font-weight: 600;
+    background: var(--paper); color: var(--ink);
+    border: 2px solid var(--line); border-radius: 999px;
+    padding: .35rem .9rem; cursor: pointer; text-decoration: none;
+  }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+  h1 { font-size: 1.75rem; line-height: 1.3; font-weight: 700; margin: 1.4rem 0 .6rem; letter-spacing: -0.02em; }
+  .lead { margin: 0 0 1.8rem; color: var(--muted); }
+
+  section.item {
+    background: var(--paper); border-left: 6px solid var(--teal);
+    border-radius: 4px 14px 14px 4px; padding: 1.2rem 1.15rem 1.15rem; margin-bottom: 1.1rem;
+  }
+  h2 { font-size: 1.22rem; margin: 0 0 .5rem; line-height: 1.4; }
+  .item p { margin: 0 0 .8rem; }
+  .why { font-weight: 600; }
+  .say {
+    background: var(--bubble); color: var(--bubble-ink);
+    border-radius: 16px 16px 16px 4px; padding: .8rem 1rem; font-weight: 600; margin-top: .4rem;
+  }
+  .say small { display: block; font-weight: 400; font-size: .78rem; opacity: .85; margin-bottom: .15rem; }
+  .more {
+    display: block; margin-top: 1rem; padding: .75rem 1rem;
+    background: var(--teal-soft); color: var(--teal); font-weight: 700;
+    border-radius: 10px; text-decoration: none; text-align: center;
+  }
+
+  h3 { font-size: 1.1rem; margin: 2.2rem 0 .8rem; }
+  .q-link {
+    display: block; background: var(--paper); border: 2px solid var(--line);
+    border-radius: 12px; padding: .9rem 1rem; margin-bottom: .8rem;
+    color: var(--ink); text-decoration: none; font-weight: 600;
+  }
+  .q-link span { display: block; font-weight: 400; font-size: .85rem; color: var(--muted); margin-top: .15rem; }
+
+  /* 서브페이지 */
+  .sub h1 { margin-top: 1.2rem; }
+  .sub h2 { margin: 2rem 0 .6rem; padding-top: 1.2rem; border-top: 2px solid var(--line); }
+  .sub h2:first-of-type { border-top: 0; padding-top: 0; }
+  .sub p { margin: 0 0 1rem; }
+  .sub ul { margin: 0 0 1rem; padding-left: 1.2rem; }
+  .sub li { margin-bottom: .45rem; }
+  .box { background: var(--paper); border-radius: 12px; padding: 1rem 1.1rem; margin: 0 0 1rem; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .alert { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 1rem 1.1rem; margin: 0 0 1rem; font-weight: 600; }
+  .home-btn {
+    display: block; margin-top: 2.4rem; padding: .9rem 1rem; text-align: center;
+    background: var(--teal); color: var(--paper); border-radius: 12px;
+    text-decoration: none; font-weight: 700;
+  }
+
+  footer { margin-top: 2.4rem; padding-top: 1.2rem; border-top: 2px solid var(--line); color: var(--muted); font-size: .88rem; }
+  footer strong { color: var(--ink); }
+  .site-foot {
+    text-align: center; color: var(--muted); font-size: .85rem; font-weight: 600;
+    padding: 1.6rem 1rem 2.2rem; letter-spacing: .02em;
+  }
+</style>
+</head>
+<body>
+<main>
+
+<!-- ================= 메인 ================= -->
+<article class="page" id="home">
+  <div class="top">
+    <span class="place">대구의료원 응급실</span>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+
+  <h1>이런 분은 접수할 때<br>먼저 말씀해 주세요</h1>
+  <p class="lead">아래에 해당하면 주사, 채혈, 혈압 측정, 검사 방법이 달라질 수 있어요. 의료진이 묻기 전에 먼저 알려주시면 더 안전하게 진료받으실 수 있어요.</p>
+
+  <section class="item">
+    <h2>혈액투석을 받고 계신 분</h2>
+    <p>투석용 혈관 수술을 한 팔에는 혈압을 재거나 채혈, 주사를 하지 않아요.</p>
+    <p class="why">그 팔을 누르거나 찌르면 투석 혈관이 막히거나 다칠 수 있기 때문이에요.</p>
+    <div class="say"><small>이렇게 말씀해 주세요</small>“투석 받고 있어요. 왼팔에 투석 혈관이 있어요.”</div>
+    <a class="more" href="#dialysis">왜 그런지 자세히 보기</a>
+  </section>
+
+  <section class="item">
+    <h2>유방암 수술을 받으신 분</h2>
+    <p>수술한 쪽 팔은 혈압 측정, 채혈, 주사를 피하는 경우가 많아요. 겨드랑이 림프절 수술을 함께 받으셨다면 특히 중요해요.</p>
+    <p class="why">수술한 쪽 팔이 붓는 림프부종이 생기거나 심해질 수 있기 때문이에요.</p>
+    <div class="say"><small>이렇게 말씀해 주세요</small>“오른쪽 유방암 수술을 했어요. 오른팔은 피해 주세요.”</div>
+    <a class="more" href="#breast">왜 그런지 자세히 보기</a>
+  </section>
+
+  <section class="item">
+    <h2>몸 안에 금속이나 기계가 있는 분</h2>
+    <p>심장박동기, 제세동기, 인공관절, 뼈에 넣은 핀이나 나사, 인공와우, 약물 펌프 등이 해당돼요.</p>
+    <p class="why">MRI 같은 검사는 몸속 금속이나 기계에 영향을 줄 수 있어서, 검사 전에 꼭 확인해야 해요.</p>
+    <div class="say"><small>이렇게 말씀해 주세요</small>“가슴에 심장박동기가 있어요.” 기기 카드나 수술 기록이 있으면 함께 보여주세요.</div>
+    <a class="more" href="#metal">왜 그런지 자세히 보기</a>
+  </section>
+
+  <h3>자주 묻는 질문</h3>
+  <a class="q-link" href="#repeat">아까 말했는데 왜 또 물어보나요?<span>같은 질문을 여러 번 하는 이유</span></a>
+  <a class="q-link" href="#sign">팔찌나 침대에 붙은 표시는 뭔가요?<span>주의 표시의 뜻과 지켜주실 점</span></a>
+  <a class="q-link" href="#guardian">환자가 직접 말하기 어려우면요?<span>보호자분이 도와주실 수 있는 것</span></a>
+
+  <footer>
+    <strong>궁금한 점은 가까운 간호사에게 언제든 물어봐 주세요.</strong><br>
+    이 안내는 일반적인 내용이며, 실제 처치는 환자 상태에 따라 의료진이 결정해요.
+  </footer>
+</article>
+
+<!-- ================= 투석 ================= -->
+<article class="page sub" id="dialysis">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>혈액투석을 받고 계신 분</h1>
+
+  <h2>투석 혈관이란 무엇인가요?</h2>
+  <p>혈액투석을 하려면 피를 빠르게 빼고 다시 넣을 수 있는 굵은 혈관이 필요해요. 그래서 보통 팔의 동맥과 정맥을 수술로 이어 혈관을 굵게 만드는데, 이것을 <strong>동정맥루</strong>라고 해요. 자기 혈관 대신 인조혈관을 넣는 경우도 있어요.</p>
+  <p>이 혈관은 투석을 계속 받기 위해 꼭 필요한, 환자분에게 가장 소중한 혈관이에요.</p>
+
+  <h2>왜 그 팔에는 혈압을 재지 않나요?</h2>
+  <p>혈압계는 팔을 꽉 조여서 혈액 흐름을 잠시 멈추게 해요. 투석 혈관이 눌려 피가 흐르지 않으면 그 안에서 피가 굳어 <strong>혈관이 막힐 수 있어요.</strong></p>
+
+  <h2>왜 그 팔에는 주사나 채혈을 하지 않나요?</h2>
+  <ul>
+    <li>바늘 자국이 늘어나면 혈관 벽이 약해지고 좁아질 수 있어요.</li>
+    <li>투석 혈관은 압력이 높아서 바늘을 뺀 뒤 피가 잘 멈추지 않을 수 있어요.</li>
+    <li>바늘 자리로 균이 들어가 감염되면 혈관 전체를 쓰지 못하게 될 수도 있어요.</li>
+  </ul>
+
+  <div class="alert">투석 혈관이 막히거나 망가지면 다시 수술을 받아야 하고, 그동안은 목이나 가슴에 임시 관을 넣어 투석해야 할 수 있어요.</div>
+
+  <h2>목이나 가슴에 투석용 관이 있다면</h2>
+  <p>이 관은 투석할 때만 쓰는 관이에요. 다른 주사나 채혈에 쓰면 감염 위험이 커지기 때문에, 관이 있다는 것도 꼭 알려주세요.</p>
+
+  <h2>함께 알려주시면 좋은 것</h2>
+  <div class="box">
+    <ul>
+      <li>투석 혈관이 있는 팔 (왼팔인지 오른팔인지)</li>
+      <li>마지막으로 투석한 날</li>
+      <li>다니시는 투석실 이름</li>
+    </ul>
+  </div>
+  <p>마지막 투석 날짜는 몸속 수분과 칼륨 상태를 판단하는 데 중요해서, 의료진이 응급 투석이 필요한지 결정할 때 도움이 돼요.</p>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+<!-- ================= 유방암 ================= -->
+<article class="page sub" id="breast">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>유방암 수술을 받으신 분</h1>
+
+  <h2>림프절은 어떤 일을 하나요?</h2>
+  <p>림프절은 몸속 림프액이 지나가는 작은 통로이자 거름망이에요. 팔에서 나온 림프액은 겨드랑이 림프절을 지나 몸 안으로 돌아가요.</p>
+  <p>유방암 수술 때 암이 퍼졌는지 확인하거나 치료하기 위해 겨드랑이 림프절을 함께 떼어내는 경우가 많아요. 그러면 그쪽 팔의 림프액이 빠져나가는 길이 좁아져요.</p>
+
+  <h2>림프부종이란?</h2>
+  <p>림프액이 잘 빠지지 못하고 팔에 고여서 <strong>팔이 붓는 상태</strong>예요. 수술 직후뿐 아니라 몇 년이 지나서 생기기도 하고, 한번 생기면 오래 관리해야 하는 경우가 많아요.</p>
+
+  <h2>왜 수술한 쪽 팔을 피하나요?</h2>
+  <ul>
+    <li>혈압계로 팔을 꽉 조이면 림프액 흐름에 부담이 될 수 있어요.</li>
+    <li>바늘 자국으로 균이 들어가면, 림프 흐름이 약한 팔은 감염(봉와직염)에 더 취약하고, 감염은 림프부종을 일으키거나 악화시킬 수 있어요.</li>
+  </ul>
+  <p>그래서 많은 병원에서 수술한 쪽 팔은 가능한 한 쓰지 않는 것을 원칙으로 하고 있어요.</p>
+
+  <div class="alert">양쪽 모두 수술하셨거나 다른 팔을 쓰기 어려운 응급 상황에서는, 의료진이 위험과 필요성을 따져 다른 부위를 쓰거나 불가피하게 그 팔을 쓸 수도 있어요.</div>
+
+  <h2>함께 알려주시면 좋은 것</h2>
+  <div class="box">
+    <ul>
+      <li>수술한 쪽 (왼쪽, 오른쪽, 양쪽)</li>
+      <li>겨드랑이 림프절 수술을 함께 받았는지</li>
+      <li>수술한 시기, 현재 항암치료나 방사선치료 중인지</li>
+      <li>팔이 붓거나 림프부종 치료를 받고 있는지</li>
+    </ul>
+  </div>
+  <p>가슴에 항암 주사용 관(케모포트)이 있다면 그것도 말씀해 주세요.</p>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+<!-- ================= 금속·기기 ================= -->
+<article class="page sub" id="metal">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>몸 안에 금속이나 기계가 있는 분</h1>
+
+  <h2>어떤 것들이 해당되나요?</h2>
+  <div class="box">
+    <ul>
+      <li>심장박동기, 삽입형 제세동기</li>
+      <li>인공관절, 뼈를 고정한 핀·나사·철판</li>
+      <li>인공와우, 뇌혈관 클립, 혈관 스텐트</li>
+      <li>몸에 넣은 약물 펌프, 신경 자극기</li>
+      <li>사고나 작업 중 몸이나 눈에 들어간 금속 조각</li>
+      <li>붙이는 약(패치) 중 일부 제품</li>
+    </ul>
+  </div>
+
+  <h2>MRI에서 왜 위험한가요?</h2>
+  <p>MRI는 아주 강한 자석으로 사진을 찍는 검사예요. 기계는 꺼져 있을 때도 늘 자석이 켜져 있어요.</p>
+  <ul>
+    <li>몸속 금속이 자석에 끌려 <strong>움직이거나 빠질 수 있어요.</strong></li>
+    <li>금속이 뜨거워져 주변 피부나 조직에 화상을 입을 수 있어요.</li>
+    <li>심장박동기 같은 기계는 <strong>설정이 바뀌거나 멈출 수 있어요.</strong></li>
+  </ul>
+  <p>요즘은 MRI를 찍어도 되도록 만든 기기도 많지만, 기기 종류와 모델을 확인해야만 알 수 있어요. 그래서 기기 카드나 수술 기록이 중요해요.</p>
+
+  <h2>다른 검사나 처치는요?</h2>
+  <p>CT나 엑스레이는 대부분 찍을 수 있지만, 금속이 있는 위치를 미리 알면 사진을 더 정확하게 읽을 수 있어요.</p>
+  <p>심장박동기나 제세동기가 있으면 전기충격, 수술 때 쓰는 전기 기구를 사용할 때 주의가 필요하고, 경우에 따라 기기 점검을 함께 해요.</p>
+
+  <div class="alert">기억나지 않더라도 “예전에 뼈 수술한 적 있어요”처럼 떠오르는 대로 말씀해 주시면 의료진이 확인할 수 있어요.</div>
+
+  <h2>함께 보여주시면 좋은 것</h2>
+  <div class="box">
+    <ul>
+      <li>기기 카드 (지갑에 넣고 다니는 작은 카드)</li>
+      <li>수술받은 병원 이름과 대략의 시기</li>
+      <li>붙이고 있는 약 패치</li>
+    </ul>
+  </div>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+<!-- ================= 반복 확인 ================= -->
+<article class="page sub" id="repeat">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>아까 말했는데<br>왜 또 물어보나요?</h1>
+
+  <p>응급실에서는 접수, 환자 분류, 진료, 검사, 처치 단계마다 같은 내용을 다시 여쭤봐요. 번거로우시겠지만, 이건 잊어서가 아니라 <strong>일부러 하는 안전 확인</strong>이에요.</p>
+
+  <h2>다시 확인하는 이유</h2>
+  <ul>
+    <li><strong>담당자가 계속 바뀌어요.</strong> 응급실에서는 여러 의료진이 함께 진료하고, 검사실 직원도 따로 있어요. 직접 다시 듣는 것이 가장 정확해요.</li>
+    <li><strong>전달 과정에서 빠질 수 있어요.</strong> 바쁜 응급실에서 기록이나 말로 전달되는 정보는 일부가 빠지거나 바뀔 수 있어요.</li>
+    <li><strong>처음엔 기억나지 않던 게 생각나기도 해요.</strong> 두 번째, 세 번째 질문에서 중요한 이야기가 나오는 경우가 실제로 많아요.</li>
+    <li><strong>위험한 처치 직전에 한 번 더 막아요.</strong> 주사, 검사, 수술 직전의 확인은 실수를 막는 마지막 단계예요.</li>
+  </ul>
+
+  <h2>이름과 생년월일도 계속 물어봐요</h2>
+  <p>비슷한 이름의 환자가 함께 있을 수 있어서, 약을 드리거나 검사를 할 때마다 이름과 생년월일 두 가지로 본인인지 확인해요.</p>
+
+  <div class="box"><p>매번 같은 내용으로 답해 주시면 돼요. 처음과 다르게 기억나는 게 있다면 그것도 편하게 말씀해 주세요.</p></div>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+<!-- ================= 표시 ================= -->
+<article class="page sub" id="sign">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>팔찌나 침대에 붙은<br>표시는 뭔가요?</h1>
+
+  <p>주의가 필요한 환자분에게는 환자 팔찌에 스티커를 붙이거나 침대에 표지를 걸어요. 투석 혈관이 있는 팔, 수술한 쪽 팔, 몸속 기기처럼 꼭 알아야 할 내용을 표시해요.</p>
+
+  <h2>왜 붙이나요?</h2>
+  <ul>
+    <li>처음 보는 의료진도 <strong>환자분께 묻기 전에 바로 알아볼 수 있어요.</strong></li>
+    <li>환자분이 잠들어 있거나 말하기 힘든 상황에서도 정보가 전달돼요.</li>
+    <li>검사실이나 병동으로 이동해도 표시가 함께 따라가요.</li>
+  </ul>
+
+  <h2>지켜주실 점</h2>
+  <div class="box">
+    <ul>
+      <li>진료가 끝날 때까지 떼지 말아 주세요.</li>
+      <li>떨어지거나 잘 보이지 않으면 간호사에게 말씀해 주세요.</li>
+      <li>표시 내용이 틀린 것 같으면 바로 알려주세요.</li>
+    </ul>
+  </div>
+  <p>표시가 있어도 의료진이 다시 여쭤볼 수 있어요. 두 번 확인하는 것이 더 안전하기 때문이에요.</p>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+<!-- ================= 보호자 ================= -->
+<article class="page sub" id="guardian">
+  <div class="top">
+    <a class="back" href="#home">← 처음으로</a>
+    <button class="size-btn" type="button" aria-pressed="false">글씨 크게</button>
+  </div>
+  <h1>환자가 직접<br>말하기 어려우면요?</h1>
+
+  <p>의식이 흐리거나, 많이 아프거나, 어르신이라 기억이 잘 나지 않으시는 경우가 많아요. 이럴 때는 <strong>보호자분의 이야기가 가장 중요한 정보</strong>가 돼요.</p>
+
+  <h2>보호자분이 알려주시면 좋은 것</h2>
+  <div class="box">
+    <ul>
+      <li>앓고 있는 병과 다니는 병원</li>
+      <li>받았던 수술 (특히 투석 혈관, 유방암, 뼈·심장 수술)</li>
+      <li>먹고 있는 약, 특히 피를 묽게 하는 약</li>
+      <li>약이나 음식 알레르기</li>
+      <li>평소와 달라진 점, 언제부터 아팠는지</li>
+    </ul>
+  </div>
+
+  <h2>가져오시면 도움이 되는 것</h2>
+  <ul>
+    <li>약 봉투나 처방전, 또는 약 사진</li>
+    <li>기기 카드, 다른 병원 진료 기록</li>
+    <li>신분증</li>
+  </ul>
+
+  <div class="box"><p>모든 걸 정확히 몰라도 괜찮아요. 아는 만큼만 말씀해 주시고, 나중에 생각나면 그때 알려주셔도 돼요.</p></div>
+
+  <a class="home-btn" href="#home">처음 화면으로</a>
+</article>
+
+</main>
+
+<div class="site-foot">대구의료원 응급실</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var pages = document.querySelectorAll('.page');
+    var btns = document.querySelectorAll('.size-btn');
+
+    function valid(id) {
+      var el = document.getElementById(id);
+      return el && el.classList.contains('page') ? id : 'home';
+    }
+    function show(id) {
+      id = valid(id);
+      pages.forEach(function (p) { p.classList.toggle('on', p.id === id); });
+      window.scrollTo(0, 0);
+    }
+    function fromHash() {
+      var h = '';
+      try { h = location.hash.slice(1); } catch (e) {}
+      show(h || 'home');
+    }
+
+    // 링크를 누르면 직접 페이지 전환 (미리보기 화면에서도 동작)
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      e.preventDefault();
+      var id = valid(a.getAttribute('href').slice(1));
+      show(id);
+      try { history.pushState(null, '', '#' + id); } catch (err) {}
+    });
+    window.addEventListener('popstate', fromHash);
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+
+    function apply(big) {
+      root.classList.toggle('big', big);
+      btns.forEach(function (b) {
+        b.textContent = big ? '글씨 작게' : '글씨 크게';
+        b.setAttribute('aria-pressed', big ? 'true' : 'false');
+      });
+    }
+    var saved = false;
+    try { saved = localStorage.getItem('bigText') === '1'; } catch (e) {}
+    apply(saved);
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var big = !root.classList.contains('big');
+        apply(big);
+        try { localStorage.setItem('bigText', big ? '1' : '0'); } catch (e) {}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
